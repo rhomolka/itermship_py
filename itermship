@@ -1,0 +1,7 @@
+#!/bin/bash
+
+CONDAENVNAME=itermship
+
+BASEDIR=$HOME/git/python/${CONDAENVNAME}
+PATH=$( brew --caskroom)/miniconda/base/envs/${CONDAENVNAME}/bin:$PATH
+exec $BASEDIR/itermship.py

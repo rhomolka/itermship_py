@@ -3,7 +3,7 @@
 import lib.iterm2.printing as printing
 # lib.plugin imports recursively
 import lib.plugin
-import sys, iterm2, pprint
+import sys
 
 dataArray = []
 

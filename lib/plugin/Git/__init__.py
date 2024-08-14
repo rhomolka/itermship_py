@@ -10,8 +10,10 @@ def getItermData():
     newfile = 0
     indexchange = 0
     workingtree = 0
+    unknownfile = 0
     indexstring = ''
     workingstring = ''
+    unknownstring = ''
     branch = ''
     aheadstring = ''
     behindstring = ''
@@ -41,20 +43,23 @@ def getItermData():
                     # we don't care about remote branch, yet
                     restofline = restofline[0:index]
                 branch = restofline
-        elif line[0:1] in 'ACDTMRU':
+        elif line[0:1] == 'A' or line[1:1] == 'A':
+            newfile += 1
+        elif line[0:1] in 'CDTMRU':
             indexchange += 1
-        elif line[1:2] in 'ACDTMRU':
+        elif line[1:2] in 'CDTMRU':
             workingtree += 1
         elif line[0:2] == '??':
-            newfile += 1
-        
+            unknownfile += 1
 
     newfilestring = ''
     if newfile > 0:
-        newfilestring = f' 󰝒 {newfile}'
+        newfilestring = f'  {newfile}'
     if indexchange > 0:
         indexstring = f'  {indexchange}'
     if workingtree > 0:
         workingstring = f'  {workingtree}'
+    if unknownfile > 0:
+        unknownstring = f' 󱀶 {unknownfile}'
             
-    return ["git",f"{giticon} {branch}{indexstring}{workingstring}{newfilestring}{aheadstring}{behindstring}"]
+    return ["git",f"{giticon} {branch}{indexstring}{workingstring}{newfilestring}{unknownstring}{aheadstring}{behindstring}"]

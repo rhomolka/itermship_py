@@ -14,3 +14,6 @@ Add a new component 'Interpolated String' and configure it.  e.g. for the git co
 
 ## Configure Status Bar Location
 Go to `Settings...` => `Appearance` => `General` Tab.  In `Status bar location` select `Bottom`
+
+## In bashrc
+`PROMPT_COMMAND='echo -ne "\033]0;${PWD}\007" && $HOME/git/python/itermship/itermship'`

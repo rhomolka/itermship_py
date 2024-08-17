@@ -1,6 +1,17 @@
+from lib.PluginBase import PluginBase
+
 import os
-def getItermData():
-    if 'CHEZMOI' in os.environ:
-        return ['chezmoi','🇫🇷']
-    else:
-        return ['chezmoi','']
+
+class Chezmoi(PluginBase):
+    '''Indicate whether you're in a ChezMoi context'''
+    def __init__(self):
+        self.nameslug = 'chezmoi'
+
+    def getItermData(self):
+        if 'CHEZMOI' in os.environ:
+            return '🇫🇷'
+        else:
+            return ''
+
+def getPlugin():
+    return Chezmoi()

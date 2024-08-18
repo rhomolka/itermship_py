@@ -12,7 +12,7 @@ class Git(PluginBase):
         giticon = ''
         cmdout = subprocess.run(["git", "status", "-s", "-b", "--porcelain"], capture_output=True, text = True)
         if cmdout.returncode != 0:
-            return ['git', '']
+            return None
         
         newfile_ct = 0
         indexchange_ct = 0
@@ -21,7 +21,7 @@ class Git(PluginBase):
         index_str = ''
         working_str = ''
         unknown_str = ''
-        branch = ''
+        branch_str = ''
         ahead_ct = 0
         behind_ct = 0
         ahead_str = ''
@@ -31,13 +31,14 @@ class Git(PluginBase):
         firstline = stdoutlines.pop(0)
     
         if '(no branch)' in firstline:
-            branch = '(no branch)'
+            branch_str = '(no branch)'
         elif 'No commits yet on ' in firstline[3:]:
-            branch = firstline[21:]
+            branch_str = firstline[21:]
         else:
+            # TODO need better regex
             m1 = re.search('^## ([A-Za-z][A-Za-z/]*)', firstline)
             if m1 is not None:
-                branch = m1.group(1)
+                branch_str = m1.group(1)
             else:
                 raise Exception("Assert: Bad regex")
         
@@ -73,7 +74,10 @@ class Git(PluginBase):
         if behind_ct > 0:
             behind_str = f' 󰁆{behind_ct}'
 
-        return f"{giticon} {branch}{index_str}{working_str}{newfile_str}{unknown_str}{ahead_str}{behind_str}"
+        return ''.join([f'{giticon} {branch_str}',
+                        f'{index_str}{working_str}',
+                        f'{newfile_str}{unknown_str}',
+                        f'{ahead_str}{behind_str}'])
 
 
 def getPlugin():

@@ -3,17 +3,17 @@ from lib.PluginBase import PluginBase
 
 import subprocess, re
 
-class Git(PluginBase):
-    '''Useful git info if cwd is a repo'''
+class GitStatus(PluginBase):
+    '''Useful git status info if cwd is a repo'''
     def __init__(self):
-        self.nameslug = 'git'
+        self.nameslug = 'gitstatus'
 
     def getItermData(self):
         giticon = ''
         cmdout = subprocess.run(["git", "status", "-s", "-b", "--porcelain"], capture_output=True, text = True)
         if cmdout.returncode != 0:
             return None
-        
+
         newfile_ct = 0
         indexchange_ct = 0
         workingtree_ct = 0
@@ -26,10 +26,10 @@ class Git(PluginBase):
         behind_ct = 0
         ahead_str = ''
         behind_str = ''
-        
+
         stdoutlines = cmdout.stdout.splitlines(False)
         firstline = stdoutlines.pop(0)
-    
+
         if '(no branch)' in firstline:
             branch_str = '(no branch)'
         elif 'No commits yet on ' in firstline[3:]:
@@ -41,7 +41,7 @@ class Git(PluginBase):
                 branch_str = m1.group(1)
             else:
                 raise Exception("Assert: Bad regex")
-        
+
         ahead_match = re.search('ahead ([1-9][0-9]*)', firstline)
         if ahead_match is not None:
             ahead_ct = int(ahead_match.group(1))
@@ -81,4 +81,4 @@ class Git(PluginBase):
 
 
 def getPlugin():
-    return Git()
+    return GitStatus()

@@ -79,6 +79,5 @@ class GitStatus(PluginBase):
                         f'{newfile_str}{unknown_str}',
                         f'{ahead_str}{behind_str}'])
 
-
 def getPlugin():
     return GitStatus()

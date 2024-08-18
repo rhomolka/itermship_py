@@ -1,3 +1,5 @@
+'''dynamically pick up plugins in lib/plugin/*/__init__.py form'''
+
 import os, inspect
 
  # realpath() will make your script run, even if you symlink it :)

@@ -1,8 +1,27 @@
 #!/bin/bash
 
+UNAME_S=${UNAME_S:=$(uname -s)}
+case "$UNAME_S" in
+Linux)
+    SCRIPTPATH=$(readlink -f /proc/$$/fd/255)
+    ;;
+Darwin)
+    SCRIPTPATH=$(readlink -f ${BASH_SOURCE[0]})
+    ;;
+esac
 CONDAENVNAME=itermship
 
-BASEDIR=$HOME/git/python/${CONDAENVNAME}
+BASEDIR=${SCRIPTPATH%/*}
+
+if [ "$(type -t brew)" ]
+then
+    BREWCONDADIR=$( brew --caskroom)/miniconda/base/envs/${CONDAENVNAME}
+    if [ -d "$BREWCONDADIR" ]
+    then
+        PATH=$BREWCONDADIR/bin:$PATH
+    fi
+fi
+
 [ -n "$(type -t brew)" ] && \
     PATH=$( brew --caskroom)/miniconda/base/envs/${CONDAENVNAME}/bin:$PATH
 

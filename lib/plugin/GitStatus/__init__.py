@@ -10,7 +10,12 @@ class GitStatus(PluginBase):
 
     def getItermData(self):
         giticon = ''
-        cmdout = subprocess.run(["git", "status", "-s", "-b", "--porcelain"], capture_output=True, text = True)
+        try:
+            cmdout = subprocess.run(["git", "status", "-s", "-b", "--porcelain"],
+                                    capture_output=True, text = True)
+        except FileNotFoundError:
+            return ''
+
         if cmdout.returncode != 0:
             return None
 

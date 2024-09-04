@@ -5,11 +5,23 @@ import lib.iterm2.printing as printing
 from lib.PluginBase import PluginBase
 # iterates and gets all the plugin
 import lib.plugin
-import sys, os
+import sys, os, argparse
 
-dataArray = []
+def parseAppArgs():
+    parser = argparse.ArgumentParser(prog='itermship',
+                                     description='Give useful info to iterm')
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--plugin-info', action='store_true', help='Dump info on what plugins do')
+    group.add_argument('--print-data',  action='store_true', help='Print data for all plugins to terminal')
+    optdata = parser.parse_args()
+    retval = {}
+    retval['plugin_info'] = optdata.plugin_info
+    retval['print_data']  = optdata.print_data
+    
+    return retval
 
 def getPluginList():
+    '''Get a list of plugin classes from plugin code dir'''
     pluginnames = [ name for name in sys.modules.keys() 
                    if 'lib.plugin.' in name ]
     moduleList = [ sys.modules[name] for name in pluginnames ]
@@ -20,7 +32,26 @@ def getPluginList():
     pluginList = [ x for x in pluginList if issubclass(x.__class__, PluginBase) ]
     return(pluginList)
 
-def main():
+def dumpAllPluginInfo():
+    pluginList = getPluginList()
+    
+    for plugin in pluginList:
+        nameslug = plugin.getNameSlug()
+        doc = plugin.__class__.__doc__
+        
+        print(f'{nameslug}: {doc}')
+
+def dumpAllPluginData():
+    pluginList = getPluginList()
+    
+    for plugin in pluginList:
+        nameslug = plugin.getNameSlug()
+        pluginData = plugin.getItermData()
+        if pluginData is None: pluginData = ''
+        print(f'{nameslug}: {pluginData}')
+
+def dumpPluginDataToIterm():
+    dataArray = []
     pluginList = getPluginList()
 
     for plugin in pluginList:
@@ -28,6 +59,7 @@ def main():
         ENV_ITERMSHIPPLUGINS = os.environ.get('ITERMSHIPPLUGINS')
         if ENV_ITERMSHIPPLUGINS is not None and \
                 f'|{nameslug}|' not in ENV_ITERMSHIPPLUGINS:
+            # no data for this, wipe out any existing data with blanks
             dataArray.append([nameslug, ''])
         else:
             pluginData = plugin.getItermData()
@@ -37,7 +69,17 @@ def main():
                 dataArray.append([nameslug, ''])
 
     for data in dataArray:
-        printing.dump(data)
-        
+        printing.dumpAsItermData(data)
+    
+def main():
+    args = parseAppArgs()
+    
+    if args['plugin_info']:
+        dumpAllPluginInfo()
+    elif args['print_data']:
+        dumpAllPluginData()
+    else:
+        dumpPluginDataToIterm()
+
 if __name__ == '__main__':
     main()

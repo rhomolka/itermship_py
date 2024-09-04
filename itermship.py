@@ -9,7 +9,8 @@ import sys, os, argparse
 
 def parseAppArgs():
     parser = argparse.ArgumentParser(prog='itermship',
-                                     description='Give useful info to iterm')
+                                     description='Give useful info to iterm',
+                                     epilog='ENV Var ITERMSHIPPLUGINS can be used to filter plugins')
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--plugin-info', action='store_true', help='Dump info on what plugins do')
     group.add_argument('--print-data',  action='store_true', help='Print data for all plugins to terminal')
@@ -33,6 +34,7 @@ def getPluginList():
     return(pluginList)
 
 def dumpAllPluginInfo():
+    '''Dump docstrings for all plugins'''
     pluginList = getPluginList()
     
     for plugin in pluginList:
@@ -42,6 +44,7 @@ def dumpAllPluginInfo():
         print(f'{nameslug}: {doc}')
 
 def dumpAllPluginData():
+    '''Dump data for all plugins'''
     pluginList = getPluginList()
     
     for plugin in pluginList:
@@ -51,6 +54,7 @@ def dumpAllPluginData():
         print(f'{nameslug}: {pluginData}')
 
 def dumpPluginDataToIterm():
+    '''Dump the plugin output to Iterm Var format'''
     dataArray = []
     pluginList = getPluginList()
 

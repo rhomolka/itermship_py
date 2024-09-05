@@ -5,7 +5,7 @@
 1. Class should:
     1. Have a doc_string
     1. Set member `self.nameslug` to a string.  this needs to be unique among modules.  Nameslug will be used for the user variable for iterm2, and also module filtering in env `ITERMSHIPPLUGINS`
-    1. Have a member function get_plugin_data() which passes the data to iterm2
+    1. Have a member function get_plugin_data() which passes the data to iterm2 variable
 1. Module should also:
 	1. Have a function get_plugin() which returns an instance of the class.
 

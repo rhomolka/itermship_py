@@ -13,6 +13,7 @@ CONDAENVNAME=itermship
 
 BASEDIR=${SCRIPTPATH%/*}
 
+# do we need special modules for plugins?  if so, put it in conda instance
 if [ "$(type -t brew)" ]
 then
     BREWCONDADIR=$( brew --caskroom)/miniconda/base/envs/${CONDAENVNAME}

@@ -7,7 +7,7 @@ from lib.PluginBase import PluginBase
 import lib.plugin
 import sys, os, argparse
 
-def parseAppArgs():
+def parse_app_args():
     parser = argparse.ArgumentParser(prog='itermship',
                                      description='Give useful info to iterm',
                                      epilog='ENV Var ITERMSHIPPLUGINS can be used to filter plugins')
@@ -21,69 +21,72 @@ def parseAppArgs():
     
     return retval
 
-def getPluginList():
+def get_plugin_list():
     '''Get a list of plugin classes from plugin code dir'''
     pluginnames = [ name for name in sys.modules.keys() 
                    if 'lib.plugin.' in name ]
-    moduleList = [ sys.modules[name] for name in pluginnames ]
+    module_list = [ sys.modules[name] for name in pluginnames ]
     # modulelist will have all modules in lib.plugin....
     # but only the base __init__ module will have the getPlugin() function
-    pluginList = [ module.getPlugin() for module in moduleList \
+    plugin_list = [ module.get_plugin() for module in module_list \
         if '/__init__.py' in module.__file__ ]
-    pluginList = [ x for x in pluginList if issubclass(x.__class__, PluginBase) ]
-    return(pluginList)
+    plugin_list = [ x for x in plugin_list if issubclass(x.__class__, PluginBase) ]
+    return(plugin_list)
 
-def dumpAllPluginInfo():
+def dump_all_plugin_info():
     '''Dump docstrings for all plugins'''
-    pluginList = getPluginList()
+    plugin_list = get_plugin_list()
     
-    for plugin in pluginList:
-        nameslug = plugin.getNameSlug()
+    for plugin in plugin_list:
+        nameslug = plugin.get_nameslug()
         doc = plugin.__class__.__doc__
         
         print(f'{nameslug}: {doc}')
 
-def dumpAllPluginData():
+def dump_all_plugin_data():
     '''Dump data for all plugins'''
-    pluginList = getPluginList()
+    plugin_list = get_plugin_list()
     
-    for plugin in pluginList:
-        nameslug = plugin.getNameSlug()
-        pluginData = plugin.getItermData()
-        if pluginData is None: pluginData = ''
-        print(f'{nameslug}: {pluginData}')
+    for plugin in plugin_list:
+        nameslug = plugin.get_nameslug()
+        plugin_data = plugin.get_plugin_data()
+        if plugin_data is None: plugin_data = ''
+        print(f'{nameslug}: {plugin_data}')
 
-def dumpPluginDataToIterm():
-    '''Dump the plugin output to Iterm Var format'''
-    dataArray = []
-    pluginList = getPluginList()
+def dump_plugin_data_term_vars():
+    '''Dump the plugin output to Iterm Var format
+    
+       Possibly filtered by ITERMSHIPPLUGINS content
+    '''
+    data_array = []
+    plugin_list = get_plugin_list()
 
-    for plugin in pluginList:
-        nameslug = plugin.getNameSlug()
+    for plugin in plugin_list:
+        nameslug = plugin.get_nameslug()
         ENV_ITERMSHIPPLUGINS = os.environ.get('ITERMSHIPPLUGINS')
         if ENV_ITERMSHIPPLUGINS is not None and \
                 f'|{nameslug}|' not in ENV_ITERMSHIPPLUGINS:
             # no data for this, wipe out any existing data with blanks
-            dataArray.append([nameslug, ''])
+            data_array.append([nameslug, ''])
         else:
-            pluginData = plugin.getItermData()
+            pluginData = plugin.get_plugin_data()
             if pluginData is not None:
-                dataArray.append([nameslug, pluginData])
+                data_array.append([nameslug, pluginData])
             else:
-                dataArray.append([nameslug, ''])
+                data_array.append([nameslug, ''])
 
-    for data in dataArray:
-        printing.dumpAsItermData(data)
+    for data in data_array:
+        printing.dump_iterm_var_data(data)
     
 def main():
-    args = parseAppArgs()
+    args = parse_app_args()
     
     if args['plugin_info']:
-        dumpAllPluginInfo()
+        dump_all_plugin_info()
     elif args['print_data']:
-        dumpAllPluginData()
+        dump_all_plugin_data()
     else:
-        dumpPluginDataToIterm()
+        dump_plugin_data_term_vars()
 
 if __name__ == '__main__':
     main()

@@ -7,11 +7,11 @@ class PluginBase(ABC):
 
     @abstractmethod
     # return data to dislay,  Or None.
-    def getItermData(self):
+    def get_plugin_data(self):
         pass
 
-    def getNameSlug(self):
+    def get_nameslug(self):
         return self.nameslug
 
-    def getPluginInfo(self):
+    def get_plugin_info(self):
         return [self.nameslug, self.__doc__]

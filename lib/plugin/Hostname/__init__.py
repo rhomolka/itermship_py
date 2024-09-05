@@ -8,15 +8,15 @@ class Hostname(PluginBase):
         self.hostname = platform.node().split('.')[0] # hostname, not fqdn
         self.uname_s  = platform.system()
 
-    def getItermData(self):
-        compIcon = ''
+    def get_plugin_data(self):
+        comp_icon = ''
         match self.uname_s:
             case 'Darwin':
-                compIcon = ''
+                comp_icon = ''
             case 'Linux':
-                compIcon = '󰌽'
+                comp_icon = '󰌽'
 
-        return f'{self.hostname} {compIcon}'
+        return f'{self.hostname} {comp_icon}'
 
-def getPlugin():
+def get_plugin():
     return Hostname()

@@ -7,11 +7,11 @@ class Chezmoi(PluginBase):
     def __init__(self):
         self.nameslug = 'chezmoi'
 
-    def getItermData(self):
+    def get_plugin_data(self):
         if 'CHEZMOI' in os.environ:
             return '🇫🇷'
         else:
             return ''
 
-def getPlugin():
+def get_plugin():
     return Chezmoi()

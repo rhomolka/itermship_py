@@ -7,7 +7,7 @@ class DockerCtx(PluginBase):
     def __init__(self):
         self.nameslug = 'dockerctx'
 
-    def getItermData(self):
+    def get_plugin_data(self):
         try:
             cmdout = subprocess.run(["docker", "context", "show"], 
                                     capture_output=True, text = True)
@@ -21,5 +21,5 @@ class DockerCtx(PluginBase):
 
         return f' {firstline}'
 
-def getPlugin():
+def get_plugin():
     return DockerCtx()

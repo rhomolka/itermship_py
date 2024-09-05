@@ -8,7 +8,7 @@ class GitStatus(PluginBase):
     def __init__(self):
         self.nameslug = 'gitstatus'
 
-    def getItermData(self):
+    def get_plugin_data(self):
         giticon = ''
         try:
             cmdout = subprocess.run(["git", "status", "-s", "-b", "--porcelain"],
@@ -84,5 +84,5 @@ class GitStatus(PluginBase):
                         f'{newfile_str}{unknown_str}',
                         f'{ahead_str}{behind_str}'])
 
-def getPlugin():
+def get_plugin():
     return GitStatus()

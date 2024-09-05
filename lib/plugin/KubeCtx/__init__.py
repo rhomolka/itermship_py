@@ -7,7 +7,7 @@ class KubeCtx(PluginBase):
     def __init__(self):
         self.nameslug = 'kubectx'
 
-    def getItermData(self):
+    def get_plugin_data(self):
         try:
             cmdout = subprocess.run(["kubectl", "config", "current-context"], 
                                     capture_output=True, text = True)
@@ -21,5 +21,5 @@ class KubeCtx(PluginBase):
 
         return f'󱃾 {firstline}'
 
-def getPlugin():
+def get_plugin():
     return KubeCtx()

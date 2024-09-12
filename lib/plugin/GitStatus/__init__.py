@@ -20,6 +20,7 @@ class GitStatus(PluginBase):
             return None
 
         newfile_ct = 0
+        delete_ct = 0
         indexchange_ct = 0
         workingtree_ct = 0
         unknownfile_ct = 0
@@ -31,6 +32,7 @@ class GitStatus(PluginBase):
         behind_ct = 0
         ahead_str = ''
         behind_str = ''
+        delete_str = ''
 
         stdoutlines = cmdout.stdout.splitlines(False)
         firstline = stdoutlines.pop(0)
@@ -58,9 +60,11 @@ class GitStatus(PluginBase):
         for line in stdoutlines:
             if line[0:1] == 'A' or line[1:1] == 'A':
                 newfile_ct += 1
-            elif line[0:1] in 'CDTMRU':
+            elif line[0:1] == 'D' or line[1:1] == 'D':
+                delete_ct += 1
+            elif line[0:1] in 'CTMRU':
                 indexchange_ct += 1
-            elif line[1:2] in 'CDTMRU':
+            elif line[1:2] in 'CTMRU':
                 workingtree_ct += 1
             elif line[0:2] == '??':
                 unknownfile_ct += 1
@@ -68,6 +72,8 @@ class GitStatus(PluginBase):
         newfile_str = ''
         if newfile_ct > 0:
             newfile_str = f'  {newfile_ct}'
+        if delete_ct > 0:
+            delete_str = f' 󱀷 {delete_ct}'
         if indexchange_ct > 0:
             index_str = f'  {indexchange_ct}'
         if workingtree_ct > 0:
@@ -81,7 +87,7 @@ class GitStatus(PluginBase):
 
         return ''.join([f'{giticon} {branch_str}',
                         f'{index_str}{working_str}',
-                        f'{newfile_str}{unknown_str}',
+                        f'{newfile_str}{delete_str}{unknown_str}',
                         f'{ahead_str}{behind_str}'])
 
 def get_plugin():

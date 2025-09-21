@@ -43,7 +43,7 @@ class GitStatus(PluginBase):
             branch_str = firstline[21:]
         else:
             # TODO need better regex
-            m1 = re.search('^## ([A-Za-z][A-Za-z/]*)', firstline)
+            m1 = re.search('^## ([A-Za-z][A-Za-z0-9/_-]*)', firstline)
             if m1 is not None:
                 branch_str = m1.group(1)
             else:
